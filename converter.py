@@ -10,11 +10,19 @@ def to_bytes(data, mode):
     try:
         if mode == "str":
             return data.encode('utf-8')
+        elif mode == "ascii10":
+            return bytes([int(x) for x in data.split()])
+        elif mode == "ascii16":
+            val = "".join(data.split()).replace("0x", "")
+            return bytes.fromhex(val)
         elif mode == "16":
             val = "".join(data.split()).replace("0x", "")
             return bytes.fromhex(val)
         elif mode == "10":
             val = int(data.strip())
+            return val.to_bytes((val.bit_length() + 7) // 8, 'big') or b'\x00'
+        elif mode == "8":
+            val = int("".join(data.split()), 8)
             return val.to_bytes((val.bit_length() + 7) // 8, 'big') or b'\x00'
         elif mode == "2":
             val = int("".join(data.split()), 2)
@@ -23,13 +31,20 @@ def to_bytes(data, mode):
         raise ValueError(f"解析錯誤: {e}")
 
 def format_output(raw_bytes, mode):
+    if not raw_bytes and mode != "str": return "0"
     """ bytes 轉換為輸出格式 """
     if mode == "str":
         return raw_bytes.decode('utf-8', errors='replace')
+    elif mode == "ascii10":
+        return " ".join(str(b) for b in raw_bytes)
+    elif mode == "ascii16":
+        return raw_bytes.hex(' ', 1)
     elif mode == "16":
         return raw_bytes.hex()
     elif mode == "10":
         return str(int.from_bytes(raw_bytes, 'big'))
+    elif mode == "8":
+        return oct(int.from_bytes(raw_bytes, 'big'))[2:]
     elif mode == "2":
         if not raw_bytes: return "0"
         return bin(int.from_bytes(raw_bytes, 'big'))[2:]
@@ -46,11 +61,11 @@ def main():
     group.add_argument("-i", "--input", metavar="INPUT", help="輸入檔案路徑")
 
     # 格式參數
-    choices = ["str", "16", "10", "2"]
+    choices = ["str", "ascii10", "ascii16", "16", "10", "8", "2"]
     parser.add_argument("-f", "--from", dest="src_mode", choices=choices, 
-                        required=True, metavar="{str,16,10,2}", help="輸入的格式")
+                        required=True, metavar="{str,ascii10,ascii16,16,10,8,2}", help="輸入的格式")
     parser.add_argument("-t", "--to", dest="dst_mode", choices=choices, 
-                        required=True, metavar="{str,16,10,2}", help="輸出的格式")
+                        required=True, metavar="{str,ascii10,ascii16,16,10,8,2}", help="輸出的格式")
     
     args = parser.parse_args()
     if not args.data and not args.input:
