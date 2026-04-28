@@ -5,7 +5,7 @@ class CustomFormatter(argparse.HelpFormatter):
     def __init__(self, prog):
         super().__init__(prog, max_help_position=40, width=100)
 
-def to_bytes(data, mode):
+def inputBytes(data, mode):
     """ 輸入統一轉換為 bytes """
     try:
         if mode == "str":
@@ -30,7 +30,7 @@ def to_bytes(data, mode):
     except Exception as e:
         raise ValueError(f"解析錯誤: {e}")
 
-def format_output(raw_bytes, mode):
+def outputFormat(raw_bytes, mode):
     if not raw_bytes and mode != "str": return "0"
     """ bytes 轉換為輸出格式 """
     if mode == "str":
@@ -82,8 +82,8 @@ def main():
             content = args.data
             
         # 執行轉換
-        intermediate_bytes = to_bytes(content, args.src_mode)
-        result = format_output(intermediate_bytes, args.dst_mode)
+        intermediate_bytes = inputBytes(content, args.src_mode)
+        result = outputFormat(intermediate_bytes, args.dst_mode)
         print(result)
 
     except Exception as e:
