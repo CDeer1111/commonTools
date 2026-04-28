@@ -26,11 +26,11 @@ def find_interchangeable(searchText):
 
     # 邏輯判斷與觸發提示
     if is_keyword:
-        print(f"[!] 警告: '{searchText}' 是 Python 關鍵字")
+        print(f"[!] 警告: {searchText} 是 Python 關鍵字")
         print(f"    需配合 exec() 執行混淆後代碼")
 
     elif is_builtin:
-        print(f"[!] 警告: '{searchText}' 是內建函數/屬性")
+        print(f"[!] 警告: {searchText} 是內建函數/屬性")
 
         # --- 高權限函數替換邏輯 ---
         danger_zone = ["eval", "exec", "open", "input", "getattr", "__import__", "setattr", "breakpoint"]
@@ -42,9 +42,9 @@ def find_interchangeable(searchText):
 
     else:
         # 非內建函數，觸發模組加載提示
-        print(f"[*] 提示: '{searchText}' 可能是外部模組")
+        print(f"[*] 提示: {searchText} 可能是外部模組")
         print(f"    [轉換提示]: 透過底層字典動態加載模組")
-        print(f"    原本意思: __builtins__.__dict__['__import__']('{searchText}')")
+        print(f"    原本意思: __builtins__.__dict__[__import__]({searchText})")
         print(f"    混淆代碼: __builtins__.__dict__ [{obf_import}]({obf_searchText})")
 
     print("-" * 60)
