@@ -1,53 +1,67 @@
 import argparse
 import os
+import re
 
 class CustomFormatter(argparse.HelpFormatter):
     def __init__(self, prog):
         super().__init__(prog, max_help_position=40, width=100)
 
-def inputBytes(data, mode):
+def autoSplit(inputData, splitSize):
+    inputData = inputData.replace("0x", " ").replace("0X", " ").replace("0o", " ").replace("0b", " ")
+    inputData = inputData.strip()
+    if not inputData: return []
+
+    if " " in inputData:
+        return [n.zfill(splitSize) for n in inputData.split()]
+    else:
+        nfill = len(inputData) % splitSize
+        if nfill > 0:
+            inputData = inputData.zfill(len(inputData) + (splitSize - nfill))
+        return re.findall(f".{{1,{splitSize}}}", inputData)
+
+def conversionBytes(inputData, mode):
     """ 輸入統一轉換為 bytes """
     try:
+        if mode in ["ascii10", "ascii16", "16", "8", "2"]:
+            inputData = inputData.replace(",", " ")
+
         if mode == "str":
-            return data.encode('utf-8')
-        elif mode == "ascii10":
-            return bytes([int(x) for x in data.split()])
-        elif mode == "ascii16":
-            val = "".join(data.split()).replace("0x", "")
-            return bytes.fromhex(val)
-        elif mode == "16":
-            val = "".join(data.split()).replace("0x", "")
-            return bytes.fromhex(val)
+            return inputData.encode('utf-8')
+        if mode == "ascii10":
+            inputVal = autoSplit(inputData, 3)
+            return bytes([int(n, 10) for n in inputVal])
+        elif mode in ["ascii16", "16"]:
+            inputVal = autoSplit(inputData, 2)
+            return bytes([int(n, 16) for n in inputVal])
         elif mode == "10":
-            val = int(data.strip())
-            return val.to_bytes((val.bit_length() + 7) // 8, 'big') or b'\x00'
+            inputVal = int(inputData.strip())
+            return inputVal.to_bytes((inputVal.bit_length() + 7) // 8, 'big') or b'\x00'
         elif mode == "8":
-            val = int("".join(data.split()), 8)
-            return val.to_bytes((val.bit_length() + 7) // 8, 'big') or b'\x00'
+            inputVal = autoSplit(inputData, 3)
+            return bytes([int(n, 8) for n in inputVal])
         elif mode == "2":
-            val = int("".join(data.split()), 2)
-            return val.to_bytes((val.bit_length() + 7) // 8, 'big') or b'\x00'
+            inputVal = autoSplit(inputData, 8)
+            return bytes([int(n, 2) for n in inputVal])
     except Exception as e:
         raise ValueError(f"解析錯誤: {e}")
 
-def outputFormat(raw_bytes, mode):
-    if not raw_bytes and mode != "str": return "0"
+def conversionOutput(inputBytes, mode):
+    if not inputBytes and mode != "str": return "0"
     """ bytes 轉換為輸出格式 """
     if mode == "str":
-        return raw_bytes.decode('utf-8', errors='replace')
+        return inputBytes.decode('utf-8', errors='replace')
     elif mode == "ascii10":
-        return " ".join(str(b) for b in raw_bytes)
+        return " ".join(f"{byte:03d}" for byte in inputBytes)
     elif mode == "ascii16":
-        return raw_bytes.hex(' ', 1)
+        return " ".join(f"{byte:02x}" for byte in inputBytes)
     elif mode == "16":
-        return raw_bytes.hex()
+        return inputBytes.hex()
     elif mode == "10":
-        return str(int.from_bytes(raw_bytes, 'big'))
+        return str(int.from_bytes(inputBytes, 'big'))
     elif mode == "8":
-        return oct(int.from_bytes(raw_bytes, 'big'))[2:]
+        return " ".join(f"{byte:03o}" for byte in inputBytes)
     elif mode == "2":
-        if not raw_bytes: return "0"
-        return bin(int.from_bytes(raw_bytes, 'big'))[2:]
+        return " ".join(f"{byte:08b}" for byte in inputBytes)
 
 def main():
     parser = argparse.ArgumentParser(
@@ -57,7 +71,7 @@ def main():
     
     # 輸入：直接輸入的資料，或是檔案路徑
     group = parser.add_mutually_exclusive_group()
-    group.add_argument("data", nargs='?', help="輸入轉換內容")
+    group.add_argument("inputData", nargs='?', help="輸入轉換內容")
     group.add_argument("-i", "--input", metavar="INPUT", help="輸入檔案路徑")
 
     # 格式參數
@@ -68,7 +82,7 @@ def main():
                         required=True, metavar="{str,ascii10,ascii16,16,10,8,2}", help="輸出的格式")
     
     args = parser.parse_args()
-    if not args.data and not args.input:
+    if not args.inputData and not args.input:
         parser.print_help()
         return
     try:
@@ -79,12 +93,13 @@ def main():
             with open(args.input, 'r', encoding='utf-8') as f:
                 content = f.read().strip()
         else:
-            content = args.data
+            content = args.inputData
             
         # 執行轉換
-        intermediate_bytes = inputBytes(content, args.src_mode)
-        result = outputFormat(intermediate_bytes, args.dst_mode)
-        print(result)
+        inputBytes = conversionBytes(content, args.src_mode)
+        print(inputBytes)
+        output = conversionOutput(inputBytes, args.dst_mode)
+        print(output)
 
     except Exception as e:
         print(f"錯誤: {e}")
