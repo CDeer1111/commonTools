@@ -97,7 +97,6 @@ def main():
             
         # 執行轉換
         inputBytes = conversionBytes(content, args.src_mode)
-        print(inputBytes)
         output = conversionOutput(inputBytes, args.dst_mode)
         print(output)
 
