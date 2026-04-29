@@ -97,8 +97,7 @@ def main():
             
         # 執行轉換
         inputBytes = conversionBytes(content, args.src_mode)
-        output = conversionOutput(inputBytes, args.dst_mode)
-        print(output)
+        print(conversionOutput(inputBytes, args.dst_mode))
 
     except Exception as e:
         print(f"錯誤: {e}")
