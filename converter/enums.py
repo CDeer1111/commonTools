@@ -2,13 +2,15 @@ from enum import Enum
 
 class EncodingType(Enum):
     UTF8 = "utf-8"
-    ASCII = "ascii"
-    BIN = "ascii-2"
-    OCT = "ascii-8"
-    DEC = "ascii-10"
-    HEX = "ascii-16"
     BASE64 = "base64"
     URL = "url"
+    BIN = "2"
+    OCT = "8"
+    DEC = "10"
+    HEX = "16"
+    ASCII_8 = "ascii-8"
+    ASCII_10 = "ascii-10"
+    ASCII_16 = "ascii-16"
 
 class Delimiter(Enum):
     NONE = ""
@@ -38,6 +40,9 @@ PREFIX_MAP = {
     EncodingType.OCT: [PrefixStyle.NONE, PrefixStyle.O_0o, PrefixStyle.O_0],
     EncodingType.DEC: [PrefixStyle.NONE, PrefixStyle.D_0d, PrefixStyle.D_d],
     EncodingType.HEX: [PrefixStyle.NONE, PrefixStyle.H_0x, PrefixStyle.H_x],
+    EncodingType.ASCII_8: [PrefixStyle.NONE, PrefixStyle.O_0o, PrefixStyle.O_0],
+    EncodingType.ASCII_10: [PrefixStyle.NONE, PrefixStyle.D_0d, PrefixStyle.D_d],
+    EncodingType.ASCII_16: [PrefixStyle.NONE, PrefixStyle.H_0x, PrefixStyle.H_x],
 }
 
 def get_valid_prefixes(target: EncodingType):

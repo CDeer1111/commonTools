@@ -21,9 +21,8 @@ def run_interactive(conv):
         t_val = input("   請選擇 [ascii-16]: ") or "ascii-16"
         t_enc = EncodingType(t_val)
 
-        # 3. 選擇前綴 (手動顯示，避免 Python 轉義)
+        # 3. 選擇前綴
         valid_p = get_valid_prefixes(t_enc)
-        # 手動組合顯示字串
         p_display = []
         for p in valid_p:
             if p.value == "":
