@@ -10,14 +10,14 @@ try:
 
         txtDiff = ""
 
-        print("Found: ", end="")
+        print("總共找到: ", end="")
         for c1, c2 in zip(t1, t2):
             if c1 != c2:
                 print(c2, end="")
                 diff = ord(c2) - ord(c1)
                 txtDiff += chr(diff)
 
-        print("\nResult:", txtDiff)
+        print("\n相減結果:", txtDiff)
 
 except FileNotFoundError:
     print("Error")
