@@ -10,7 +10,7 @@ Usage:
     python obfuscator_all.py -p cmd  "dir C:\\Users"
     python obfuscator_all.py -p auto -i
     echo "whoami" | python obfuscator_all.py -p bash
-
+ 
 Build single binary:
     pyinstaller --onefile obfuscator_all.py
 """
