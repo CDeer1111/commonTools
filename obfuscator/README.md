@@ -1,11 +1,11 @@
 操作方式
 ```
-python3 obfuscator_all_zh.py -p bash "cat /etc/hosts"
-python3 obfuscator_all_zh.py -f test.py
+python3 obfuscator.py -p bash "cat /etc/hosts"
+python3 obfuscator.py -f test.py
 ```
 
 ```
-python3 obfuscator_all_zh.py [-h] [-p {bash,cmd,python,auto}] [-i] [-f FILE] \
+python3 obfuscator.py [-h] [-p {bash,cmd,python,auto}] [-i] [-f FILE] \
                              [--whole] [-o OUTPUT] [--only {alias,split,encode}] [--max MAX_N] [--json] \
                              [--no-color] [command]
 
