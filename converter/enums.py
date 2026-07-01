@@ -1,5 +1,5 @@
 from enum import Enum
-
+ 
 class EncodingType(Enum):
     UTF8 = "utf-8"
     BASE64 = "base64"
