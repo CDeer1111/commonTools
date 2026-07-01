@@ -1,4 +1,12 @@
-操作方式
+# 互動模式
+```
+python3 obfuscator_all_zh.py -i    # 可直接使用
+python3 obfuscator_all_en.py -i    # 可直接使用
+
+python3 obfuscator.py -i           # 使用必須下載 obfuscatorData 資料夾
+```
+
+# 命令列模式
 ```
 python3 obfuscator.py -p bash "cat /etc/hosts"
 python3 obfuscator.py -f test.py
@@ -24,12 +32,4 @@ options:
   --json                                        以 JSON 格式輸出（便於程式讀取）
   --no-color                                    停用 ANSI 色彩輸出
 
-```
-
-使用互動式界面
-```
-python3 obfuscator_all_zh.py -i    # 可直接使用
-python3 obfuscator_all_en.py -i    # 可直接使用
-
-python3 obfuscator.py -i           # 使用必須下載 obfuscatorData 資料夾
 ```
