@@ -11,7 +11,7 @@ class EncodingType(Enum):
     ASCII_8 = "ascii-8"
     ASCII_10 = "ascii-10"
     ASCII_16 = "ascii-16"
-
+ 
 class Delimiter(Enum):
     NONE = ""
     SPACE = " "
