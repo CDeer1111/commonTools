@@ -1,4 +1,4 @@
-## 互動模式
+# 互動模式
 ```
 python3 obfuscator_all_zh.py -i    # 可直接使用
 python3 obfuscator_all_en.py -i    # 可直接使用
@@ -6,7 +6,7 @@ python3 obfuscator_all_en.py -i    # 可直接使用
 python3 obfuscator.py -i           # 使用必須下載 obfuscatorData 資料夾
 ```
 
-## 命令列模式
+# 命令列模式
 ```
 python3 obfuscator.py -p bash "cat /etc/hosts"
 python3 obfuscator.py -f test.py
