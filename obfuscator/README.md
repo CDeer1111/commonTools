@@ -6,8 +6,8 @@ python3 obfuscator.py -f test.py
 
 ```
 python3 obfuscator.py [-h] [-p {bash,cmd,python,auto}] [-i] [-f FILE] \
-                             [--whole] [-o OUTPUT] [--only {alias,split,encode}] [--max MAX_N] [--json] \
-                             [--no-color] [command]
+                      [--whole] [-o OUTPUT] [--only {alias,split,encode}] \
+                      [--max MAX_N] [--json] [--no-color] [command]
 
 positional arguments:
   command                                       要混淆的指令（省略則從標準輸入讀取，或使用 -f / -i）
